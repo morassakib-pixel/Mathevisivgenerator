@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ম্যাথ জেনারেটর - গণিত অনুশীলন করুন সহজ উপায়ে</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #4338ca;
+            --text-color: #1f2937;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* AdSense Placeholder Styling (অ্যাডের জন্য পর্যাপ্ত গ্যাপ) */
+        .ad-container {
+            background-color: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            color: #9ca3af;
+            text-align: center;
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 900px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        .header-ad { margin-top: 20px; }
+        .footer-ad { margin-bottom: 20px; }
+
+        /* Navigation Bar */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        nav a {
+            color: #4b5563;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary-color);
+        }
+
+        /* Main Content Container */
+        .main-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .main-wrapper {
+                grid-template-columns: 3fr 1fr; /* ডানপাশে সাইডবার অ্যাডের জন্য */
+            }
+        }
+
+        /* Sections Content */
+        .content-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: none; /* শুরুতে সব হাইড থাকবে, জেএস দিয়ে শো হবে */
+        }
+
+        .content-section.active-section {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            margin: 20px 0 10px 0;
+            color: #374151;
+        }
+
+        p, ul {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        /* Math App UI Styling */
+        .math-box {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 25px;
+            border: 2px solid #e0e7ff;
+            border-radius: 16px;
+            background-color: #f8fafc;
+            text-align: center;
+        }
+
+        .settings-group {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        select, button, input {
+            padding: 10px 16px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #c7d2fe;
+            outline: none;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .equation {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 30px 0;
+            color: #1e1b4b;
+            letter-spacing: 2px;
+        }
+
+        .input-answer {
+            width: 150px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            min-height: 27px;
+        }
+
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-ad {
+            background-color: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            color: #9ca3af;
+            text-align: center;
+            padding: 20px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            position: sticky;
+            top: 90px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1f2937;
+            color: #9ca3af;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 1px solid #374151;
+        }
+
+        footer a {
+            color: #e5e7eb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a onclick="showSection('home')" class="logo">ম্যাথ মাস্টার</a>
+            <nav id="main-nav">
+                <a onclick="showSection('home')" id="nav-home" class="active">হোম</a>
+                <a onclick="showSection('about')" id="nav-about">অ্যাবাউট</a>
+                <a onclick="showSection('privacy')" id="nav-privacy">প্রাইভেসি পলিসি</a>
+                <a onclick="showSection('terms')" id="nav-terms">টার্মস অ্যান্ড কন্ডিশনস</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Top Advertisement Space (গুগল অ্যাডসেন্স টপ ব্যানার) -->
+    <div class="ad-container header-ad">
+        <!-- এখানে আপনার গুগল অ্যাডসেন্স কোড বসাবেন -->
+        ডিজিটাল বিজ্ঞাপন প্লেসহোল্ডার (অ্যাডসেন্স টপ ব্যানার)
+    </div>
+
+    <!-- Main Grid Structure -->
+    <div class="main-wrapper">
+        
+        <!-- Main Content Area -->
+        <main>
+            
+            <!-- HOME SECTION (MATH GENERATOR) -->
+            <section id="home" class="content-section active-section">
+                <h2>অনলাইন ম্যাথ জেনারেটর</h2>
+                <p>আপনার গণিতের দক্ষতা বৃদ্ধি করতে আমাদের ইন্টারেক্টিভ ম্যাথ জেনারেটর টুলটি ব্যবহার করুন। নিচে আপনার পছন্দের ক্যাটাগরি এবং লেভেল সিলেক্ট করে জেনারেট বাটনে ক্লিক করুন।</p>
+                
+                <div class="math-box">
+                    <div class="settings-group">
+                        <select id="operation">
+                            <option value="add">যোগ (+)</option>
+                            <option value="sub">বিয়োগ (-)</option>
+                            <option value="mul">গুণ (×)</option>
+                            <option value="div">ভাগ (÷)</option>
+                        </select>
+                        <select id="difficulty">
+                            <option value="easy">সহজ (১ ডিজিট)</option>
+                            <option value="medium" selected>মাঝারি (২ ডিজিট)</option>
+                            <option value="hard">কঠিন (৩ ডিজিট)</option>
+                        </select>
+                        <button class="btn" onclick="generateProblem()">নতুন প্রশ্ন</button>
+                    </div>
+
+                    <div class="equation" id="problem-display">২5 + ১4 = ?</div>
+
+                    <div style="margin-bottom: 15px;">
+                        <input type="number" id="user-answer" class="input-answer" placeholder="উত্তর লিখুন" onkeyup="checkEnter(event)">
+                        <button class="btn" onclick="verifyAnswer()">যাচাই করুন</button>
+                    </div>
+
+                    <div class="feedback" id="feedback-msg"></div>
+
+                    <div class="score-board">
+                        <div>মোট প্রশ্ন: <span id="total-questions">0</span></div>
+                        <div>সঠিক উত্তর: <span id="correct-answers">0</span></div>
+                        <div>স্কোর: <span id="score-percentage">0%</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABOUT SECTION -->
+            <section id="about" class="content-section">
+                <h2>আমাদের সম্পর্কে (About Us)</h2>
+                <p>স্বাগতম "ম্যাথ মাস্টার" ওয়েবসাইটে। আমরা শিক্ষার্থীদের গণিতের ভীতি দূর করতে এবং তাদের লজিক্যাল থিংকিং বা গাণিতিক ক্ষমতা উন্নত করতে এই ওয়েব অ্যাপ্লিকেশনটি তৈরি করেছি।</p>
+                <p>আমাদের এই প্ল্যাটফর্মের মাধ্যমে প্রাথমিক বিদ্যালয় থেকে শুরু করে যেকোনো বয়সের মানুষ খুব সহজেই যোগ, বিয়োগ, গুণ এবং ভাগের নিত্যনতুন সমস্যা সমাধান করে অনুশীলন করতে পারবেন।</p>
+                <h3>আমাদের বৈশিষ্ট্যসমূহ:</h3>
+                <ul>
+                    <li>সম্পূর্ণ বিনামূল্যে আনলিমিটেড গাণিতিক প্রশ্ন জেনারেট করার সুবিধা।</li>
+                    <li>সহজ, মাঝারি এবং কঠিন—তিনটি ভিন্ন স্তরে অনুশীলনের সুযোগ।</li>
+                    <li>রিয়েল-টাইম রেজাল্ট বা তাৎক্ষণিক উত্তর যাচাইয়ের ব্যবস্থা।</li>
+                    <li>সম্পূর্ণ রেসপনসিভ ডিজাইন, যা মোবাইল বা কম্পিউটার যেকোনো ডিভাইসে সহজে ব্যবহারযোগ্য।</li>
+                </ul>
+            </section>
+
+            <!-- PRIVACY POLICY SECTION -->
+            <section id="privacy" class="content-section">
+                <h2>প্রাইভেসি পলিসি (Privacy Policy)</h2>
+                <p>সর্বশেষ আপডেট: জুলাই ২০২৬</p>
+                <p>আমাদের ভিজিটরদের গোপনীয়তা রক্ষা করা আমাদের কাছে অত্যন্ত গুরুত্বপূর্ণ। এই প্রাইভেসি পলিসি ডকুমেন্টে আলোচনা করা হয়েছে আমরা কী ধরনের তথ্য সংগ্রহ ও রেকর্ড করি এবং তা কীভাবে ব্যবহার করি।</p>
+                
+                <h3>লগ ফাইল (Log Files)</h3>
+                <p>ম্যাথ মাস্টার স্ট্যান্ডার্ড লজিক অনুযায়ী লগ ফাইল ব্যবহার করে। এই ফাইলগুলো ওয়েবসাইটে আসা ভিজিটরদের তথ্য লগ করে। এর মধ্যে রয়েছে ইন্টারনেট প্রোটোকল (IP) অ্যাড্রেস, ব্রাউজারের ধরন, ইন্টারনেট সার্ভিস প্রোভাইডার (ISP), তারিখ এবং সময় স্ট্যাম্প ইত্যাদি। এগুলো কোনো ব্যক্তিগতভাবে সনাক্তযোগ্য তথ্যের সাথে যুক্ত নয়।</p>
+                
+                <h3>গুগল ডাবলক্লিক ডিএআরটি কুকি (Google DoubleClick DART Cookie)</h3>
+                <p>গুগল আমাদের সাইটের অন্যতম থার্ড-পার্টি ভেন্ডর। এটি আমাদের সাইটের ভিজিটরদের তাদের পূর্ববর্তী ভিজিটের ওপর ভিত্তি করে বিজ্ঞাপন দেখানোর জন্য DART কুকি ব্যবহার করে। তবে ভিজিটরেরা চাইলে গুগলের অ্যাড এবং কনটেন্ট নেটওয়ার্কের প্রাইভেসি পলিসি লিংকে গিয়ে DART কুকির ব্যবহার বন্ধ করতে পারেন।</p>
+                
+                <h3>বিজ্ঞাপন পার্টনারদের পলিসি</h3>
+                <p>আমাদের সাইটের বিজ্ঞাপনদাতারা (যেমন: গুগল অ্যাডসেন্স) কুকি এবং ওয়েব বীকন ব্যবহার করতে পারে। আমাদের থার্ড-পার্টি অ্যাড সার্ভার বা অ্যাড নেটওয়ার্কগুলো সরাসরি আপনার ব্রাউজারে বিজ্ঞাপন পাঠাতে প্রযুক্তি ব্যবহার করে।</p>
+            </section>
+
+            <!-- TERMS AND CONDITIONS SECTION -->
+            <section id="terms" class="content-section">
+                <h2>টার্মস অ্যান্ড কন্ডিশনস (Terms & Conditions)</h2>
+                <p>আমাদের ওয়েবসাইটটি ব্যবহার করার মাধ্যমে আপনি নিম্নলিখিত শর্তাবলি মেনে নিচ্ছেন বলে গণ্য হবে। যদি আপনি এই শর্তাবলির কোনো অংশের সাথে একমত না হন, তবে দয়া করে সাইটটি ব্যবহার করা থেকে বিরত থাকুন।</p>
+                <h3>ব্যবহারের লাইসেন্স</h3>
+                <p>এই ওয়েবসাইটটি শুধুমাত্র শিক্ষামূলক এবং ব্যক্তিগত ব্যবহারের জন্য তৈরি করা হয়েছে। আপনি কোনোভাবেই ওয়েবসাইটের কোড বা কনটেন্ট বাণিজ্যিক উদ্দেশ্যে নকল বা পুনরুৎপাদন করতে পারবেন না।</p>
+                <h3>সীমাবদ্ধতা</h3>
+                <p>আমরা চেষ্টা করি সাইটের সকল গাণিতিক হিসাব নির্ভুল রাখতে। তবে কোনো ভুল হিসাব বা কারিগরি ত্রুটির কারণে ব্যবহারকারীর কোনো ক্ষতি হলে কর্তৃপক্ষ দায়ী থাকবে না।</p>
+            </section>
+
+        </main>
+
+        <!-- Sidebar Area (গুগল অ্যাডসেন্স সাইডবার ব্যানার) -->
+        <aside class="sidebar">
+            <div class="sidebar-ad">
+                <!-- এখানে সাইডবার অ্যাড কোড বসবে -->
+                বিজ্ঞাপন প্লেসহোল্ডার<br>(AdSense Sidebar)
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Bottom Advertisement Space (গুগল অ্যাডসেন্স বটম ব্যানার) -->
+    <div class="ad-container footer-ad">
+        <!-- এখানে আপনার গুগল অ্যাডসেন্স কোড বসাবেন -->
+        ডিজিটাল বিজ্ঞাপন প্লেসহোল্ডার (অ্যাডসেন্স বটম ব্যানার)
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 ম্যাথ মাস্টার | সর্বস্বত্ব সংরক্ষিত।</p>
+        <div style="margin-top: 10px;">
+            <a onclick="showSection('home')">হোম</a> | 
+            <a onclick="showSection('about')">অ্যাবাউট</a> | 
+            <a onclick="showSection('privacy')">প্রাইভেসি পলিসি</a> | 
+            <a onclick="showSection('terms')">টার্মস</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript For App Logic and Navigation -->
+    <script>
+        // --- Navigation Logic ---
+        function showSection(sectionId) {
+            // সকল সেকশন হাইড করা
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active-section'));
+            
+            // নির্দিষ্ট সেকশন শো করা
+            const activeSection = document.getElementById(sectionId);
+            if(activeSection) {
+                activeSection.classList.add('active-section');
+            }
+
+            // ন্যাভিগেশন লিংক একটিভ ক্লাস চেঞ্জ করা
+            const navLinks = document.querySelectorAll('#main-nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            const currentLink = document.getElementById(`nav-${sectionId}`);
+            if(currentLink) {
+                currentLink.classList.add('active');
+            }
+            
+            // স্ক্রল করে উপরে নিয়ে যাওয়া
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+
+        // --- Math Generator Logic ---
+        let currentAnswer = 0;
+        let total = 0;
+        let correct = 0;
+
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateProblem() {
+            const operation = document.getElementById('operation').value;
+            const difficulty = document.getElementById('difficulty').value;
+            let num1, num2;
+
+            // ডিফিকাল্টি অনুযায়ী নম্বর রেঞ্জ ঠিক করা
+            if (difficulty === 'easy') {
+                num1 = getRandomNumber(1, 9);
+                num2 = getRandomNumber(1, 9);
+            } else if (difficulty === 'medium') {
+                num1 = getRandomNumber(10, 99);
+                num2 = getRandomNumber(10, 99);
+            } else {
+                num1 = getRandomNumber(100, 999);
+                num2 = getRandomNumber(100, 999);
+            }
+
+            let displayOp = '';
+
+            switch (operation) {
+                case 'add':
+                    currentAnswer = num1 + num2;
+                    displayOp = '+';
+                    break;
+                case 'sub':
+                    // উত্তর যাতে মাইনাস না আসে তার জন্য বড় সংখ্যা প্রথমে রাখা
+                    if (num1 < num2) { let temp = num1; num1 = num2; num2 = temp; }
+                    currentAnswer = num1 - num2;
+                    displayOp = '-';
+                    break;
+                case 'mul':
+                    // গুণের ক্ষেত্রে সংখ্যা কিছুটা ছোট রাখা যাতে সুবিধা হয়
+                    if(difficulty === 'medium') { num1 = getRandomNumber(5, 20); num2 = getRandomNumber(2, 15); }
+                    if(difficulty === 'hard') { num1 = getRandomNumber(10, 50); num2 = getRandomNumber(5, 25); }
+                    currentAnswer = num1 * num2;
+                    displayOp = '×';
+                    break;
+                case 'div':
+                    // নিঃশেষে বিভাজ্য হওয়ার জন্য গুণ করে ভাগ তৈরি করা
+                    if (difficulty === 'easy') num2 = getRandomNumber(2, 9);
+                    else if (difficulty === 'medium') num2 = getRandomNumber(3, 12);
+                    else num2 = getRandomNumber(5, 25);
+                    
+                    let tempAns = getRandomNumber(2, 10);
+                    num1 = num2 * tempAns; 
+                    currentAnswer = tempAns;
+                    displayOp = '÷';
+                    break;
+            }
+
+            document.getElementById('problem-display').innerText = `${num1} ${displayOp} ${num2} = ?`;
+            document.getElementById('user-answer').value = '';
+            document.getElementById('feedback-msg').innerText = '';
+            document.getElementById('user-answer').focus();
+        }
+
+        function verifyAnswer() {
+            const userAnsInput = document.getElementById('user-answer').value;
+            const feedback = document.getElementById('feedback-msg');
+            
+            if(userAnsInput.trim() === "") {
+                feedback.innerText = "দয়া করে একটি উত্তর লিখুন!";
+                feedback.className = "feedback error";
+                return;
+            }
+
+            const userAnswer = parseInt(userAnsInput);
+            total++;
+
+            if(userAnswer === currentAnswer) {
+                feedback.innerText = "চমৎকার! সঠিক উত্তর হয়েছে। 🎉";
+                feedback.className = "feedback success";
+                correct++;
+            } else {
+                feedback.innerText = `ভুল উত্তর! সঠিক উত্তর ছিল: ${currentAnswer}`;
+                feedback.className = "feedback error";
+            }
+
+            updateScore();
+        }
+
+        function updateScore() {
+            document.getElementById('total-questions').innerText = total;
+            document.getElementById('correct-answers').innerText = correct;
+            
+            let percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
+            document.getElementById('score-percentage').innerText = percentage + '%';
+        }
+
+        function checkEnter(event) {
+            if (event.key === "Enter") {
+                verifyAnswer();
+            }
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে প্রথম প্রশ্ন জেনারেট করা
+        window.onload = function() {
+            generateProblem();
+        };
+    </script>
+</body>
+</html>
